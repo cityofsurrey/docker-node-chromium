@@ -17,6 +17,15 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+  && apt-get install -y build-essential chrpath libssl-dev libxft-dev \
+  && apt-get install -y libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev \
+  && wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 \
+  && tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/ \
+  && ln -sf /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin
+
+RUN line="openssl_conf = default_conf"; sed -i "/^$line/ c#$line" /etc/ssl/openssl.cnf
+
 # Fix Debian vulnerabilities
 RUN DEBIAN_FRONTEND=noninteractive && \
   DEBIAN_PRIORITY=critical && \
